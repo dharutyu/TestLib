@@ -15,17 +15,16 @@ namespace AbsDal
     public interface IRepository<TEntity>
         where TEntity : EntityBase
     {
-        string TestFn();
+        IQueryable<TEntity> GetAll();
     }
     public interface IService<TEntity>
         where TEntity : EntityBase
     {
-        string TestSvcFn();
     }
 
     public interface IUnitOfWork
     {
-        IRepository<TEntity> Repository<TEntity>() 
+        IRepository<TEntity> Repository<TEntity>()
             where TEntity : EntityBase;
         void Save();
     }
@@ -37,16 +36,13 @@ namespace AbsDal
             repositories = new Hashtable();
             context = new DbContext("");
         }
-        private Hashtable repositories;
+        private readonly Hashtable repositories;
         private DbContext context;
-        public IRepository<TEntity> Repository<TEntity>() 
+        public IRepository<TEntity> Repository<TEntity>()
             where TEntity : EntityBase
         {
 
-            if (repositories == null)
-                repositories = new Hashtable();
-
-            var type = typeof(TEntity).Name;
+            var type = typeof(TEntity);//.Name;
 
             if (!repositories.ContainsKey(type))
             {
@@ -101,6 +97,11 @@ namespace AbsDal
         {
             return "ok";
         }
+
+        public IQueryable<TEntity> GetAll()
+        {
+            return dbSet.AsQueryable();
+        }
     }
 
 
@@ -110,16 +111,49 @@ namespace AbsDal
         public string Name { get; set; }
     }
 
-    public class TestService : Service<TestEntity>
-    {
-        public TestService(IUnitOfWork uow) : base(uow)
-        {
-            
-        }
+    //public interface ITestService1 : IService<TestEntity>
+    //{ }
+    //public class TestService1 : Service<TestEntity>, ITestService1
+    //{
+    //    public TestService1(IUnitOfWork uow) : base(uow)
+    //    {
 
-        public void TestFn()
-        {
-        }
+    //    }
+
+    //    public void TestFn()
+    //    {
+    //    }
+    //}
+
+    //public class TestService2 : Service<TestEntity>
+    //{
+    //    public TestService2(IUnitOfWork uow) : base(uow)
+    //    {
+
+    //    }
+
+    //    public void TestFn()
+    //    {
+    //    }
+    //}
+
+    public abstract class ComplexService<TEntity> : IService<TEntity>
+        where TEntity : EntityBase
+    {
+
     }
+
+    //public class TestServiceCombined : Service<TestEntity>
+    //{
+    //    public TestServiceCombined(IUnitOfWork uow, ITestService1 svc1) : base(uow)
+    //    {
+
+    //    }
+
+    //    public void TestFn()
+    //    {
+    //    }
+    //}
+
 
 }

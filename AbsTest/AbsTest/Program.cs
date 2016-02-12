@@ -9,15 +9,14 @@ namespace AbsTest
 {
 
     
-
-
+    
     class Program
     {
+
         static void Main(string[] args)
-        {
-            UnitOfWork uow = new UnitOfWork();
-            TestService svc = new TestService(uow);
-            
+        {     
+            // TestServiceCombined svc = new TestServiceCombined();
+         
         }
     }
 }
